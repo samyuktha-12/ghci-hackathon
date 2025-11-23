@@ -1,0 +1,226 @@
+# Fine-Tuning Configuration for PocketSage Gemini Model
+# This configuration file documents all hyperparameters and settings used for fine-tuning
+
+model:
+  base_model: "gemini-2.0-flash"
+  model_name: "pocketsage-receipt-categorizer"
+  version: "1.0.0"
+  
+  # Model parameters
+  temperature: 0.1  # Low temperature for consistent categorization
+  top_p: 0.95
+  top_k: 40
+  max_output_tokens: 50  # Short output for category names only
+
+training:
+  # Training approach
+  method: "few-shot_learning"  # Using few-shot learning with Gemini
+  num_few_shot_examples: 5  # Number of examples in prompt
+  
+  # Data split
+  train_split: 0.8
+  validation_split: 0.1
+  test_split: 0.1
+  
+  # Training data requirements
+  min_training_examples: 50
+  recommended_training_examples: 500
+  max_training_examples: 10000
+  
+  # Data augmentation
+  augmentation:
+    enabled: true
+    techniques:
+      - "synonym_replacement"
+      - "abbreviation_variations"
+      - "merchant_name_variations"
+      - "noise_injection"
+    augmentation_factor: 1.5  # 50% more data through augmentation
+
+categories:
+  # Category definitions
+  categories:
+    - name: "groceries"
+      description: "Food items, household essentials, supermarket purchases"
+      keywords: ["grocery", "supermarket", "food items", "household", "pantry"]
+      
+    - name: "utilities"
+      description: "Electricity, water, internet, phone bills"
+      keywords: ["electricity", "water", "internet", "phone", "utility", "bill"]
+      
+    - name: "transportation"
+      description: "Fuel, taxi, bus, train, parking, car maintenance"
+      keywords: ["fuel", "petrol", "diesel", "taxi", "uber", "ola", "bus", "train", "parking"]
+      
+    - name: "dining"
+      description: "Restaurants, cafes, food delivery, takeout"
+      keywords: ["restaurant", "cafe", "food delivery", "swiggy", "zomato", "dining", "food"]
+      
+    - name: "travel"
+      description: "Hotels, flights, travel bookings, vacation expenses"
+      keywords: ["hotel", "flight", "travel", "booking", "vacation", "trip"]
+      
+    - name: "reimbursement"
+      description: "Business expenses, reimbursable items"
+      keywords: ["business", "reimbursement", "corporate", "expense", "gst"]
+      
+    - name: "home"
+      description: "Furniture, home improvement, household items, appliances"
+      keywords: ["furniture", "home improvement", "appliance", "household", "home"]
+
+prompt_engineering:
+  # Few-shot prompt structure
+  system_instruction: |
+    You are a receipt categorization expert for PocketSage, a financial management app.
+    Your task is to categorize receipts into one of the predefined categories based on
+    merchant name, items purchased, and transaction context.
+  
+  # Prompt template
+  prompt_template: |
+    {system_instruction}
+    
+    Categories:
+    {category_descriptions}
+    
+    Examples:
+    {few_shot_examples}
+    
+    Now, categorize the following receipt. Return ONLY the category name (one word):
+    {receipt_data}
+  
+  # Category description format
+  category_description_format: "- {name}: {description}"
+  
+  # Example format
+  example_format: |
+    Example {index}:
+    Receipt Data:
+    {receipt_input}
+    Category: {category}
+
+evaluation:
+  # Evaluation metrics
+  metrics:
+    - "accuracy"
+    - "precision"  # Per-category and macro/micro
+    - "recall"    # Per-category and macro/micro
+    - "f1_score"  # Per-category and macro/micro
+    - "confusion_matrix"
+  
+  # Target performance
+  target_metrics:
+    macro_f1_score: 0.92
+    micro_f1_score: 0.94
+    per_category_f1_min: 0.90  # Minimum F1 for individual categories
+    accuracy: 0.92
+  
+  # Evaluation settings
+  evaluation_mode: "few_shot"  # Use same few-shot approach for evaluation
+  num_evaluation_examples: 5  # Number of examples in evaluation prompt
+  
+  # Confusion matrix
+  confusion_matrix:
+    normalize: true  # Show percentages
+    include_percentages: true
+    save_visualization: true
+    visualization_format: ["png", "pdf"]
+
+normalization:
+  # Normalization settings
+  enabled: true
+  steps:
+    - "abbreviation_expansion"
+    - "noise_removal"
+    - "ocr_correction"
+    - "language_normalization"
+    - "whitespace_cleaning"
+  
+  # Abbreviation expansion
+  abbreviation_expansion:
+    enabled: true
+    custom_mappings: {}  # Add custom mappings here
+  
+  # Noise removal
+  noise_removal:
+    enabled: true
+    remove_transaction_ids: true
+    remove_timestamps: true
+    remove_reference_numbers: true
+  
+  # OCR correction
+  ocr_correction:
+    enabled: true
+    correction_rules: "standard"  # Use standard OCR correction rules
+  
+  # Language normalization
+  language_normalization:
+    enabled: true
+    supported_languages:
+      - "hindi"
+      - "tamil"
+      - "telugu"
+      - "kannada"
+      - "malayalam"
+      - "bengali"
+      - "marathi"
+
+data_quality:
+  # Data quality requirements
+  min_items_per_receipt: 1
+  max_items_per_receipt: 100
+  require_merchant_name: false
+  require_total_amount: false
+  
+  # Data validation
+  validate_categories: true
+  validate_amounts: true
+  validate_dates: false  # Dates are optional
+  
+  # Data cleaning
+  remove_duplicates: true
+  remove_invalid_categories: true
+  handle_missing_values: "skip"  # Options: skip, default, infer
+
+reproducibility:
+  # Reproducibility settings
+  random_seed: 42
+  save_training_data: true
+  save_model_config: true
+  save_evaluation_results: true
+  
+  # Version control
+  git_commit: true
+  save_timestamp: true
+  experiment_name: "pocketsage_v1.0"
+
+logging:
+  # Logging configuration
+  log_level: "INFO"
+  log_file: "evaluation/training.log"
+  log_metrics: true
+  log_predictions: false  # Set to true for debugging
+  
+  # Progress reporting
+  progress_interval: 10  # Log progress every N examples
+  save_checkpoints: false  # Not applicable for few-shot learning
+
+output:
+  # Output configuration
+  save_predictions: true
+  save_metrics: true
+  save_confusion_matrix: true
+  save_classification_report: true
+  
+  # Output formats
+  output_formats:
+    - "json"
+    - "csv"
+    - "html"  # For visualization
+  
+  # Output directory
+  output_directory: "evaluation/results"
+  
+  # File naming
+  timestamp_format: "%Y%m%d_%H%M%S"
+  file_prefix: "pocketsage_evaluation"
+

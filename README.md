@@ -2,6 +2,13 @@
 
 **A comprehensive AI-powered financial management platform that transforms receipts, transactions, and financial data into actionable insights using Google Gemini AI and Google Cloud Platform.**
 
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 20 58 AM" src="https://github.com/user-attachments/assets/18a86979-ef01-4711-a609-b421d88ba50f" />
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 20 43 AM" src="https://github.com/user-attachments/assets/62552cf9-22cc-4377-9fbc-ff38a910601a" />
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 21 16 AM" src="https://github.com/user-attachments/assets/7275550f-183d-4253-959a-9991bffa8c40" />
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 21 32 AM" src="https://github.com/user-attachments/assets/1affb1f4-3bd3-481f-add2-f9d04250bbac" />
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 21 48 AM" src="https://github.com/user-attachments/assets/7fd46afb-8659-4e0f-8c4b-48c4a8a5a6d4" />
+<img width="180" height="360" alt="Screenshot 2025-11-23 at 9 21 57 AM" src="https://github.com/user-attachments/assets/834ac220-0b1c-4e15-945f-5a2f49e73b81" />
+
 ---
 
 ## Overview
@@ -37,9 +44,7 @@ PocketSage is an intelligent financial companion that leverages multimodal AI to
 
 ## System Architecture Overview
 
-Our architecture leverages the full strength of Google Cloud services and Gemini AI to create a closed-loop financial ecosystem.
-
-> 📊 **Visual Architecture Diagram**: See [ARCHITECTURE.md](./ARCHITECTURE.md) for a detailed Mermaid diagram of the complete system architecture.
+<img width="786" height="600" alt="mermaid-diagram-2025-11-23-085216" src="https://github.com/user-attachments/assets/c95ccd7a-2a67-4e7c-9329-5090b4d7ff8f" />
 
 ### Components
 
